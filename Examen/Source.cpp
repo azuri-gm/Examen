@@ -5,16 +5,17 @@
 #include <gl/glut.h>
 
 #include <stdlib.h>
-//Variables for the rotation angle and movement of the teapot.
-float teapotRotationAngle = 0.0f;
+
+//Variables for the movement of the teapot.
 float teapotMove = 0.0f;
 float teapotMoveX = 0.0f;
 float teapotDirX = 0.02f;
+//Variables for the movement and direction of the sphere.
 float sphereMoveX = 0.0f;
 float sphereDirX = 0.1f;
 float sphereDirY = 0.1f;
-float rotateCube = 0.01f;
 float sphereMoveY = -9.3f;
+//Variables for pausing and restarting the game.
 static bool paused = false;
 static bool restart = false;
 
@@ -42,31 +43,30 @@ static void collision() {
 
 static void display(void)
 {
+	//Generate random number in order to choose which kind of object will spawn.
 	int r = rand() % 6;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Add rotation to the teapot for every frame that is rendered.
-	teapotMove += 0.01f;
 	//Draw teapot.
 	glPushMatrix();
 	glTranslated(0, 4.0, -10);
 	glColor3f(0.4, 1, 0.2);
 	glTranslatef(teapotMoveX, 0, 0);
 	glutSolidTeapot(0.5);
-	//If the teapot leaves the screen, it appears on the other side to continue the movement.
-	if (teapotMoveX >= 6.0 || teapotMoveX <= -6.0) {
+	//Check in order to keep the teapot bounded within the screen, if the x limits are surpassed the teapot rebounds.
+	if (teapotMoveX >= 4.9 || teapotMoveX <= -4.9) {
 		teapotDirX = teapotDirX * -1;
 	}
 	glPopMatrix();
 
-	//Draw sphere.
+	//Draw the sphere.
 	glPushMatrix();
 	glTranslatef(sphereMoveX, sphereMoveY, -20);
 	glColor3f(0.8, 0.7, .2);
 	glScalef(0.25, 0.25, 0.25);
 	glutSolidSphere(2, 16, 16);
 	collision();
-	
 	glPopMatrix();
+	//Checks the random number and creates the type of object according to that number.
 	if (r = 1) {
 
 	}
@@ -82,15 +82,15 @@ static void display(void)
 	else if (r = 5) {
 
 	}
-
-
+	//Continously adds to the movement of the teapot.
 	teapotMoveX += teapotDirX;
 
 	glutSwapBuffers();
 }
 
 static void key(unsigned char key, int x, int y)
-{
+{	
+	//Conditions for the movement of the sphere (left and right) & Pausing and restarting the game.
 	if (key == 'D' || key == 'd') {
 		sphereMoveX += 0.5;
 	}
